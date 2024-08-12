@@ -21,8 +21,8 @@ export default function LoginPage() {
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="flex flex-col min-h-screen justify-center">
+      <h1 className="text-center text-3xl">Login</h1>
       <LoginForm />
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterForm } from "../../components/SignupForm";
+import { SignupForm } from "../../components/SignupForm";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,9 +22,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <div>
-      <h1>Register</h1>
-      <RegisterForm />
+    <div className="flex flex-col min-h-screen justify-center">
+      <h1 className="text-center text-3xl">Signup</h1>
+      <SignupForm />
     </div>
   );
 }

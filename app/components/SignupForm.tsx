@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import Spinner from "./Spinner";
 
-export function RegisterForm() {
+export function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,39 +17,82 @@ export function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Nama"
-        required
-      />
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-      <input
-        type="confirmation_password"
-        value={confPassword}
-        onChange={(e) => setConfPassword(e.target.value)}
-        placeholder="confirmation_Password"
-        required
-      />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Loading..." : "Register"}
-      </button>
-      {error && <p>{error}</p>}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col p-2 rounded mx-2 items-center"
+    >
+      <div className="p-2 md:w-[500px]">
+        <p className="text-xl text-gray-400 p-2">
+          You need Signup first. Please fill requirements bellow to use kanban
+          board.
+        </p>
+        {error && <p className="p-2 text-red-600 font-semibold">{error}</p>}
+        <div className="flex flex-col p-2">
+          <label htmlFor="name">Name</label>
+          <input
+            className="p-2 border-2 rounded"
+            id="name"
+            name="name"
+            type="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+          />
+        </div>
+        <div className="flex flex-col p-2">
+          <label htmlFor="email">Email</label>
+          <input
+            className="p-2 border-2 rounded"
+            id="email"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+          />
+        </div>
+        <div className="flex flex-col p-2">
+          <label htmlFor="password">Password</label>
+          <input
+            className="p-2 border-2 rounded"
+            id="password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+        </div>
+        <div className="flex flex-col p-2">
+          <label htmlFor="confPassword">Confirmation Password</label>
+          <input
+            className="p-2 border-2 rounded"
+            id="confPassword"
+            name="confPassword"
+            type="confPassword"
+            value={confPassword}
+            onChange={(e) => setConfPassword(e.target.value)}
+            placeholder="Confirmation Password"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className=" bg-primary py-2 px-4 rounded-lg text-white my-2 m-2"
+        >
+          {isLoading ? <Spinner /> : "Signup"}
+        </button>
+      </div>
+      <p>
+        Have a Account?{" "}
+        <a href="/auth/login" className="text-blue-500 hover:underline">
+          Login
+        </a>
+      </p>
     </form>
   );
 }
