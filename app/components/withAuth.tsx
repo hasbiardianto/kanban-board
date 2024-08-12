@@ -13,7 +13,7 @@ export function withAuth<P extends object>(
     useEffect(() => {
       const token = localStorage.getItem('auth_token')
       if (!token) {
-        router.push('/login')
+        router.push('/auth/login')
       } else {
         setIsAuthorized(true)
       }

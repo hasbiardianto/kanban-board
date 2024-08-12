@@ -58,7 +58,8 @@ export function useAuth() {
 
     const logout = () => {
         localStorage.removeItem('auth_token')
-        router.push('/login')
+        router.push('/auth/login')
+        setIsLoading(false)
     }
 
     return { login, signup, logout, isLoading, error }
