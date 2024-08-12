@@ -1,7 +1,7 @@
-import CancelButton from "./CancelButton";
-import DescriptionInput from "./DescriptionInput";
-import SubmitButton from "./SubmitButton";
-import TextField from "./TextField";
+import CancelButton from "./buttons/CancelButton";
+import TextArea from "./inputs/TextArea";
+import SubmitButton from "./buttons/SubmitButton";
+import TextField from "./inputs/TextField";
 
 interface FormProps {
   onCancel: () => void;
@@ -14,7 +14,7 @@ export default function ModalGroup({ onCancel }: FormProps) {
         <form method="post">
           <h1 className="px-2 font-semibold">Add New Group</h1>
           <TextField />
-          <DescriptionInput />
+          <TextArea />
           <div className="inline-flex gap-2 m-2">
             <CancelButton onClick={onCancel}/>
             <SubmitButton />

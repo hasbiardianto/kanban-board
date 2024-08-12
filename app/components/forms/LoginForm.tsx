@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import Spinner from "./Spinner";
+import { useAuth } from "../../hooks/useAuth";
+import Spinner from "../Spinner";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");

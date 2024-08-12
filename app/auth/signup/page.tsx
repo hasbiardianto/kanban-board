@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignupForm } from "../../components/SignupForm";
+import { SignupForm } from "../../components/forms/SignupForm";
 
 export default function RegisterPage() {
   const router = useRouter();

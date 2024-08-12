@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import PlusIcon from "./components/PlusIcon";
 import { withAuth } from "./components/withAuth";
-import { useAuth } from "./hooks/useAuth";
-import { LogoutButton } from "./components/LogoutButton";
+import { LogoutButton } from "./components/buttons/LogoutButton";
 import ModalGroup from "./components/ModalGroup";
+import { fetchTodos } from "./api/todos/route";
+import { Todo } from "./type";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,6 +20,8 @@ function Home() {
 
     checkAuth();
 
+    getTodos();
+
     window.addEventListener("storage", checkAuth);
     return () => {
       window.removeEventListener("storage", checkAuth);
@@ -28,6 +30,12 @@ function Home() {
 
   const toogleShow = () => {
     setShowModal(!showModal);
+  };
+
+  const getTodos = async () => {
+    const token = localStorage.getItem("authToken");
+    const todos = (await fetchTodos(token)) as Todo[];
+    return todos;
   };
 
   return (
@@ -44,8 +52,8 @@ function Home() {
               Add New Group
             </button>
           </div>
-          {isAuthenticated && <LogoutButton />}
-          {showModal && <ModalGroup onCancel={toogleShow}/>}
+
+          {showModal && <ModalGroup onCancel={toogleShow} />}
         </div>
       </div>
     </main>

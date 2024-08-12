@@ -1,4 +1,4 @@
-export default function DescriptionInput() {
+export default function TextArea() {
   return (
     <div className="flex flex-col p-2 gap-2">
       <label htmlFor="description" className="text-sm">Description</label>

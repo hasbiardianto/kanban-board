@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 export function LogoutButton() {
   const { logout } = useAuth();
