@@ -18,18 +18,48 @@ export function useAuth() {
             })
 
             if (!response.ok) {
-                throw new Error('Login gagal')
+                throw new Error('Login Failed')
             }
 
             const data = await response.json()
             localStorage.setItem('auth_token', data.auth_token)
             router.push('/')
         } catch (err) {
-            setError('Login gagal. Silakan coba lagi.')
+            setError('Login Failed. Please Try Again.')
         } finally {
             setIsLoading(false)
         }
     }
 
-    return { login, isLoading, error }
+    const signup = async (name: string, email: string, password: string, confPassword: string) => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, confPassword }),
+            })
+
+            if (!response.ok) {
+                throw new Error('Signup Failed')
+            }
+
+            const data = await response.json()
+            localStorage.setItem('auth_token', data.auth_token)
+            router.push('/')
+        } catch (err) {
+            setError('Signup Failed. Please Try Again.')
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const logout = () => {
+        localStorage.removeItem('auth_token')
+        router.push('/login')
+    }
+
+    return { login, signup, logout, isLoading, error }
 }

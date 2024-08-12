@@ -1,10 +1,10 @@
 "use client";
 
-import { LoginForm } from "../../components/LoginForm";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { RegisterForm } from "../../components/SignupForm";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,10 +20,11 @@ export default function LoginPage() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
   return (
     <div>
-      <h1>Login</h1>
-      <LoginForm />
+      <h1>Register</h1>
+      <RegisterForm />
     </div>
   );
 }
