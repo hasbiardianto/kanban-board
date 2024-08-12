@@ -7,10 +7,12 @@ import Modal from "./components/Modal";
 import { fetchTodos } from "./api/todos/route";
 import { Todo } from "./type";
 import { CreateGroupForm } from "./components/forms/CreateGroupForm";
+import { Group } from "./components/todo/Group";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -34,9 +36,8 @@ function Home() {
   const getTodos = async () => {
     const token = localStorage.getItem("auth_token");
     const todos = (await fetchTodos(token)) as Todo[];
-    console.log(todos);
-
-    return todos;
+    console.log(todos)
+    return setTodos(todos);
   };
 
   return (
@@ -53,13 +54,17 @@ function Home() {
               Add New Group
             </button>
           </div>
-
           {showModal && (
             <Modal>
               <CreateGroupForm onCancel={toogleShow} />
             </Modal>
           )}
         </div>
+      </div>
+      <div className="flex m-4 p-2">
+        {todos.map((todo) => (
+          <Group key={todo.id} todo={todo} />
+        ))}
       </div>
     </main>
   );
