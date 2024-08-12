@@ -1,8 +1,4 @@
-interface ButtonProps {
-  onClick: () => void;
-}
-
-export default function CancelButton({ onClick }: ButtonProps) {
+export default function CancelButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
