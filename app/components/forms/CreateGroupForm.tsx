@@ -5,13 +5,29 @@ import Input from "../inputs/Input";
 import CancelButton from "../buttons/CancelButton";
 import SubmitButton from "../buttons/SubmitButton";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { storeTodo } from "@/app/api/todos/route";
 
 export function CreateGroupForm({ onCancel }: { onCancel: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  console.log(description);
+
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const token = localStorage.getItem("auth_token");
+    try {
+      event.preventDefault();
+      const newTodo = await storeTodo(title, description, token);
+      console.log(newTodo);
+      router.push("/");
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
-    <form method="post" className="md:w-[500px]">
+    <form method="post" onSubmit={handleSubmit} className="md:w-[500px]">
       <h1 className="mt-4 px-2 font-semibold">Add New Group</h1>
       <Input
         label="Title"

@@ -16,24 +16,20 @@ export async function fetchTodos(token: string | null): Promise<Todo[]> {
   return await response.json();
 }
 
-export async function storeTodo(request: Request) {
-    const { title } = await request.json();
-    const token = localStorage.getItem('auth_token')
+export async function storeTodo(title: string, description: string, token: string | null) {
+  try {
+    const response = await fetch(`${API_URL}/todos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ title, description }),
+    });
 
-    try {
-        const response = await fetch(`${API_URL}/todos`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ title }),
-        })
-
-        if (!response.ok) {
-            throw new Error('Failed to create group task');
-        }
-
-        return response.json();
-
-    } catch (error) {
-        return NextResponse.json({ error: 'Cannot add group' }, { status: 400 })
+    if (!response.ok) {
+      throw new Error('Failed to create group task');
     }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
 }

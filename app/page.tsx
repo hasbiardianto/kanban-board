@@ -14,14 +14,13 @@ function Home() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("auth_token");
       setIsAuthenticated(!!token);
     };
 
     checkAuth();
 
     getTodos();
-
     window.addEventListener("storage", checkAuth);
     return () => {
       window.removeEventListener("storage", checkAuth);
@@ -33,8 +32,10 @@ function Home() {
   };
 
   const getTodos = async () => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("auth_token");
     const todos = (await fetchTodos(token)) as Todo[];
+    console.log(todos);
+
     return todos;
   };
 
@@ -55,7 +56,7 @@ function Home() {
 
           {showModal && (
             <Modal>
-              <CreateGroupForm onCancel={toogleShow}/>
+              <CreateGroupForm onCancel={toogleShow} />
             </Modal>
           )}
         </div>
