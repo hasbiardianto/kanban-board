@@ -1,23 +1,9 @@
 "use client";
 
 import PlusIcon from "./components/PlusIcon";
-import { useEffect } from 'react';
-import { useAuth } from './context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { withAuth } from './components/withAuth'
 
-export default function Home() {
-  const { authToken } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!authToken) {
-      router.push('/auth/login');
-    }
-  }, [authToken, router]);
-
-  if (!authToken) {
-    return <div>Loading...</div>;
-  }
+function Home() {
 
   return (
     <main className="flex">
@@ -33,3 +19,5 @@ export default function Home() {
     </main>
   );
 }
+
+export default withAuth(Home);
