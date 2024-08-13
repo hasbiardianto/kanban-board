@@ -5,17 +5,39 @@ import Input from "../inputs/Input";
 import { Percentage } from "../inputs/Percentage";
 import SubmitButton from "../buttons/SubmitButton";
 import CancelButton from "../buttons/CancelButton";
+import { storeItems } from "@/app/api/items/route";
+import { Item } from "@/app/type";
 
-export function CreateTaskForm({ onCancel }: { onCancel: () => void }) {
-  const [name, setName] = useState("");
-  const [percentage, setPercentage] = useState(0);
+export function CreateTaskForm({
+  todoId,
+  onCancel,
+  onTaskCreated,
+}: {
+  todoId: number;
+  onCancel: () => void;
+  onTaskCreated: (newItem: Item) => void;
+}) {
+  const [name, setName] = useState<string>("");
+  const [percentage, setPercentage] = useState<number>(0);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      console.error("No auth token found");
+      return;
+    }
+    try {
+      const newItem = await storeItems(name, percentage, todoId, token);
+      onTaskCreated(newItem);
+      onCancel();
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
   };
 
   return (
-    <form action="post" onSubmit={handleSubmit} className="md:w-[420px]">
+    <form onSubmit={handleSubmit} className="md:w-[420px]">
       <h1 className="p-2 font-bold">Create New Task</h1>
       <Input
         label="Task Name"

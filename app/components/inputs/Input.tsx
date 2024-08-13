@@ -20,6 +20,7 @@ export default function Input({
       </label>
       <input
         type={type}
+        required
         className="p-1 border-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         placeholder={placeholder}
         value={value}

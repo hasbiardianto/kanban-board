@@ -19,11 +19,11 @@ export function CreateGroupForm({ onCancel }: { onCancel: () => void }) {
     try {
       event.preventDefault();
       const newTodo = await storeTodo(title, description, token);
-      console.log(newTodo);
-      router.push("/");
+      onCancel();
     } catch (error) {
       throw error;
     }
+    router.push("/");
   };
 
   return (

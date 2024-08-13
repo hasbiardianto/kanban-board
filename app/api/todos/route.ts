@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 import { Todo } from '@/app/type';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;

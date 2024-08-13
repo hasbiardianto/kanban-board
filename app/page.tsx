@@ -7,7 +7,7 @@ import Modal from "./components/Modal";
 import { fetchTodos } from "./api/todos/route";
 import { Todo } from "./type";
 import { CreateGroupForm } from "./components/forms/CreateGroupForm";
-import { Group } from "./components/todo/Group";
+import { GroupContainer } from "./components/todo/GroupContainer";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,7 +36,6 @@ function Home() {
   const getTodos = async () => {
     const token = localStorage.getItem("auth_token");
     const todos = (await fetchTodos(token)) as Todo[];
-    console.log(todos)
     return setTodos(todos);
   };
 
@@ -61,10 +60,14 @@ function Home() {
           )}
         </div>
       </div>
-      <div className="flex m-4 p-2">
-        {todos.map((todo) => (
-          <Group key={todo.id} todo={todo} />
-        ))}
+      <div className="m-4 px-2">
+        <div className="flex gap-4">
+          {todos.map((todo) => (
+            <div key={todo.id} className="flex-shrink-0">
+              <GroupContainer todo={todo} />
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
