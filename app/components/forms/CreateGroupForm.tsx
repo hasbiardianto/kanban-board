@@ -7,8 +7,15 @@ import SubmitButton from "../buttons/SubmitButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { storeTodo } from "@/app/api/todos/route";
+import { Todo } from "@/app/type";
 
-export function CreateGroupForm({ onCancel }: { onCancel: () => void }) {
+export function CreateGroupForm({
+  onCancel,
+  onTodoCreated,
+}: {
+  onCancel: () => void;
+  onTodoCreated: (newTodo: Todo) => void;
+}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -19,6 +26,7 @@ export function CreateGroupForm({ onCancel }: { onCancel: () => void }) {
     try {
       event.preventDefault();
       const newTodo = await storeTodo(title, description, token);
+      onTodoCreated(newTodo);
       onCancel();
     } catch (error) {
       throw error;

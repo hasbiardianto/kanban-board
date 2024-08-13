@@ -35,7 +35,7 @@ export async function storeItems(name: string, percentage: number, todo_id: numb
 }
 
 // Update a specific item
-export async function updateItems(id: number, name: string, percentage: number, token: string | null): Promise<Item> {
+export async function updateItems(id: number, name?: string, percentage?: number, token: string | null): Promise<Item> {
     const response = await fetch(`${API_URL}/items/${id}`, {
         method: "PUT",
         headers: {

@@ -29,25 +29,29 @@ function Home() {
     };
   }, []);
 
-  const toogleShow = () => {
+  const toggleShow = () => {
     setShowModal(!showModal);
+  };
+
+  const handleTodosCreated = (newTodo: Todo) => {
+    setTodos((prevTodos) => [...prevTodos, newTodo]);
   };
 
   const getTodos = async () => {
     const token = localStorage.getItem("auth_token");
     const todos = (await fetchTodos(token)) as Todo[];
-    return setTodos(todos);
+    setTodos(todos);
   };
 
   return (
     <main className="flex flex-col">
-      <div className="w-screen border-b-2">
+      <div className="border-b-2">
         <div className="flex justify-between items-center mx-4 px-2 py-4">
           <div className="inline-flex gap-2">
             <h1 className="font-bold text-xl">Product Roadmap</h1>
             <button
               className="flex items-center gap-2 bg-primary text-white rounded-lg text-xs px-4 py-1"
-              onClick={toogleShow}
+              onClick={toggleShow}
             >
               <PlusIcon />
               Add New Group
@@ -55,13 +59,16 @@ function Home() {
           </div>
           {showModal && (
             <Modal>
-              <CreateGroupForm onCancel={toogleShow} />
+              <CreateGroupForm
+                onCancel={toggleShow}
+                onTodoCreated={handleTodosCreated}
+              />
             </Modal>
           )}
         </div>
       </div>
-      <div className="m-4 px-2">
-        <div className="flex gap-4">
+      <div className="m-4 overflow-x-auto">
+        <div className="flex gap-4 min-w-max">
           {todos.map((todo) => (
             <div key={todo.id} className="flex-shrink-0">
               <GroupContainer todo={todo} />

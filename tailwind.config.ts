@@ -11,18 +11,16 @@ const config: Config = {
     extend: {
       colors: {
         primary: "#01959f",
-        todo: {
-          blue: "#4DB5BC",
-          orange: "#FA9810",
-          red: "#E11428",
-          green: "#43936C",
-          bg: {
-            blue: "#F7FEFF",
-            orange: "#FFFCF5",
-            red: "#FFFAFA",
-            green: "#F8FBF9",
-          },
-        }
+        blue: "#4DB5BC",
+        orange: "#FA9810",
+        red: "#E11428",
+        green: "#43936C",
+        bg: {
+          blue: "#F7FEFF",
+          orange: "#FFFCF5",
+          red: "#FFFAFA",
+          green: "#F8FBF9",
+        },
       },
     },
   },
