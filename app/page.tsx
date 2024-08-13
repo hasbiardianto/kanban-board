@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PlusIcon from "./components/PlusIcon";
+import PlusIcon from "./components/icons/PlusIcon";
 import { withAuth } from "./components/withAuth";
 import Modal from "./components/Modal";
 import { fetchTodos } from "./api/todos/route";

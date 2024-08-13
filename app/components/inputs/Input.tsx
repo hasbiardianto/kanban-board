@@ -10,7 +10,7 @@ export default function Input({
   label: string;
   type: string;
   placeholder: string;
-  value: string;
+  value: string | number ;
   onChange: ChangeEventHandler<HTMLInputElement>;
 }) {
   return (
