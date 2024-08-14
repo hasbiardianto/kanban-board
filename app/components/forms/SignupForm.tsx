@@ -1,15 +1,51 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
 import Spinner from "../Spinner";
+import { useRouter } from "next/navigation";
 
 export function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
-  const { signup, isLoading, error } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+  const router = useRouter();
+
+  const signup = async (
+    name: string,
+    email: string,
+    password: string,
+    confPassword: string
+  ) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Login gagal");
+      }
+
+      const data = await response.json();
+      const { auth_token } = data;
+      localStorage.setItem("auth_token", auth_token);
+      router.push("/");
+    } catch (error) {
+      setError("Login failed. Please check your credentials and try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +125,7 @@ export function SignupForm() {
       </div>
       <p>
         Have a Account?{" "}
-        <a href="/auth/login" className="text-blue-500 hover:underline">
+        <a href="/v1/auth/login" className="text-blue-500 hover:underline">
           Login
         </a>
       </p>
