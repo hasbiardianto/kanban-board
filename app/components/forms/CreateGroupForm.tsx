@@ -6,7 +6,6 @@ import CancelButton from "../buttons/CancelButton";
 import SubmitButton from "../buttons/SubmitButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { storeTodo } from "@/app/api/todos/route";
 import { Todo } from "@/app/type";
 
 export function CreateGroupForm({
@@ -19,19 +18,29 @@ export function CreateGroupForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const token = localStorage.getItem("auth_token");
     try {
-      event.preventDefault();
-      const newTodo = await storeTodo(title, description, token);
-      onTodoCreated(newTodo);
-      onCancel();
+      const response = await fetch(`${API_URL}/todos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title, description }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create group task");
+      }
+      onTodoCreated(await response.json());
     } catch (error) {
       throw error;
     }
-    router.push("/");
   };
 
   return (

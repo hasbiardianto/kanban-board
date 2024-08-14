@@ -5,7 +5,6 @@ import { RoundPlusIcon } from "../icons/RoundPlusIcon";
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import { CreateTaskForm } from "../forms/CreateTaskForm";
-import { fetchItems, updateItems } from "@/app/api/items/route";
 import { ItemContainer } from "./ItemContainer";
 
 export function GroupContainer({
@@ -26,6 +25,8 @@ export function GroupContainer({
   const [showModal, setShowModal] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
   useEffect(() => {
     getItems();
   }, [movedItem]);
@@ -36,8 +37,15 @@ export function GroupContainer({
 
   const getItems = async () => {
     const token = localStorage.getItem("auth_token");
-    const fetchedItems = await fetchItems(todo.id, token);
-    setItems(fetchedItems);
+    const response = await fetch(`${API_URL}/todos/${todo.id}/items`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch items");
+    }
+    setItems(await response.json());
   };
 
   const handleTaskCreated = (newItem: Item) => {
@@ -52,13 +60,12 @@ export function GroupContainer({
 
   const handleTodoIdUpdate = (updatedItem: Item) => {
     setItems((prevItems) =>
-      prevItems.map(
-        (item) =>
-          item.id === updatedItem.id
-            ? item.todo_id !== updatedItem.todo_id
-              ? updatedItem
-              : item
+      prevItems.map((item) =>
+        item.id === updatedItem.id
+          ? item.todo_id !== updatedItem.todo_id
+            ? updatedItem
             : item
+          : item
       )
     );
     console.log(updatedItem);

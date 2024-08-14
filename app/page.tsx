@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import PlusIcon from "./components/icons/PlusIcon";
 import { withAuth } from "./components/withAuth";
 import Modal from "./components/Modal";
-import { fetchTodos } from "./api/todos/route";
-import { AdjacentIds, Item, Todo } from "./type";
+import { Item, Todo } from "./type";
 import { CreateGroupForm } from "./components/forms/CreateGroupForm";
 import { GroupContainer } from "./components/container/GroupContainer";
 import { DropArea } from "./components/DropArea";
-import { moveItem } from "./api/items/route";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,6 +18,8 @@ function Home() {
   const [targetTodoId, setTargetTodoId] = useState<number>(0);
   const [oldTodoId, setOldTodoId] = useState<number>(0);
   const [movedItem, setMovedItem] = useState<Item>();
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
   useEffect(() => {
     const checkAuth = () => {
@@ -47,15 +47,38 @@ function Home() {
 
   const getTodos = async () => {
     const token = localStorage.getItem("auth_token");
-    const todos = (await fetchTodos(token)) as Todo[];
-    setTodos(todos);
+    try {
+      const request = await fetch(`${API_URL}/todos`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTodos(await request.json());
+    } catch (error) {
+      throw error;
+    }
   };
 
   const onDrop = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const item = await moveItem(activeItem, oldTodoId, token, targetTodoId);
-      setMovedItem(item);
+      const response = await fetch(
+        `${API_URL}/todos/${oldTodoId}/items/${activeItem}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            target_todo_id: targetTodoId,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update item");
+      }
+      setMovedItem(await response.json());
     } catch (error) {
       throw error;
     }

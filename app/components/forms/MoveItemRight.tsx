@@ -1,6 +1,4 @@
-import { moveItem } from "@/app/api/items/route";
 import { Item, Todo } from "@/app/type";
-import { ArrowLeftIcon } from "../icons/ArrowLeftIcon";
 import { ReactNode } from "react";
 
 export function MoveItemRight({
@@ -16,18 +14,34 @@ export function MoveItemRight({
   onTaskUpdated: (value: Item) => void;
   children: ReactNode;
 }) {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
   const moveRight = async () => {
-    try {
-      const index = todos.findIndex((todo) => todo.id === todoId);
-      if (index >= 0 && index < todos.length - 1) {
+    const index = todos.findIndex((todo) => todo.id === todoId);
+    if (index >= 0 && index < todos.length - 1) {
+      const token = localStorage.getItem("auth_token");
+      const targetTodoId = todos[index + 1].id;
+      try {
         const token = localStorage.getItem("auth_token");
-        const targetTodoId = todos[index + 1].id;
-        const newItem = await moveItem(item.id, todoId, token, targetTodoId);
-        onTaskUpdated(newItem);
+        const response = await fetch(
+          `${API_URL}/todos/${item.todo_id}/items/${item.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              target_todo_id: targetTodoId,
+            }),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to update item");
+        }
+        onTaskUpdated(await response.json());
+      } catch (error) {
+        throw error;
       }
-      console.log("failed");
-    } catch (error) {
-      throw error;
     }
   };
   return (
