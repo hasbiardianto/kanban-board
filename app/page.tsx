@@ -7,7 +7,7 @@ import Modal from "./components/Modal";
 import { fetchTodos } from "./api/todos/route";
 import { Todo } from "./type";
 import { CreateGroupForm } from "./components/forms/CreateGroupForm";
-import { GroupContainer } from "./components/todo/GroupContainer";
+import { GroupContainer } from "./components/container/GroupContainer";
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -67,7 +67,7 @@ function Home() {
           )}
         </div>
       </div>
-      <div className="m-4 overflow-x-auto">
+      <div className="m-4 overflow-x-auto min-h-screen">
         <div className="flex gap-4 min-w-max">
           {todos.map((todo) => (
             <div key={todo.id} className="flex-shrink-0">

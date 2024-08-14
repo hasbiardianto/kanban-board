@@ -29,7 +29,7 @@ export function Percentage({
 
   return (
     <div className="flex flex-col p-2 gap-2">
-      <label htmlFor="percentage" className="text-sm">
+      <label htmlFor="percentage" className="text-sm font-bold">
         Progress
       </label>
       <div className="relative w-1/2">
@@ -42,7 +42,7 @@ export function Percentage({
           onChange={handleChange}
           value={value}
           placeholder="70"
-          className="p-1 pr-8 border-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="py-1 px-2 pr-8 text-gray-500 font-normal text-base border-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         />
         <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
           %

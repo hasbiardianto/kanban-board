@@ -35,9 +35,9 @@ export async function storeItems(name: string, percentage: number, todo_id: numb
 }
 
 // Update a specific item
-export async function updateItems(id: number, name?: string, percentage?: number, token: string | null): Promise<Item> {
-    const response = await fetch(`${API_URL}/items/${id}`, {
-        method: "PUT",
+export async function updateItems(itemId: number, todoId: number, token: string | null, name?: string, percentage?: number): Promise<Item> {
+    const response = await fetch(`${API_URL}/todos/${todoId}/items/${itemId}`, {
+        method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
@@ -54,8 +54,8 @@ export async function updateItems(id: number, name?: string, percentage?: number
 }
 
 // Delete a specific item
-export async function destroyItems(id: number, token: string | null): Promise<void> {
-    const response = await fetch(`${API_URL}/items/${id}`, {
+export async function destroyItems(todoId: number, itemId: number, token: string | null): Promise<void> {
+    const response = await fetch(`${API_URL}/todos/${todoId}/items/${itemId}`, {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',

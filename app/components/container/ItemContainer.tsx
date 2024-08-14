@@ -3,9 +3,19 @@
 import { Item } from "@/app/type";
 import SettingIcon from "../icons/SettingIcon";
 import { useState, useRef, useEffect } from "react";
-import { Dialog } from "../Dialog"; // Ensure this path is correct
+import { DialogItem } from "../DialogItem";
 
-export function ItemContainer({ item }: { item: Item }) {
+export function ItemContainer({
+  item,
+  todoId,
+  onTaskUpdated,
+  onTaskDeleted,
+}: {
+  item: Item;
+  todoId: number;
+  onTaskUpdated: (updatedItem: Item) => void;
+  onTaskDeleted: (itemId: number) => void;
+}) {
   const [showDialog, setShowDialog] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -44,7 +54,11 @@ export function ItemContainer({ item }: { item: Item }) {
         <progress
           value={item.progress_percentage}
           max={100}
-          className="my-2 h-4 w-full progress-unfilled:bg-slate-200 progress-filled:bg-primary"
+          className={`my-2 h-4 w-full progress-unfilled:bg-slate-200 ${
+            item.progress_percentage === 100
+              ? "progress-filled:bg-green progress-filled:rounded-lg"
+              : "progress-filled:bg-primary "
+          }`}
         />
         <span className="text-gray-500 text-xs px-1">
           {item.progress_percentage}%
@@ -53,7 +67,15 @@ export function ItemContainer({ item }: { item: Item }) {
           <button ref={buttonRef} className="ml-2" onClick={toggleDialog}>
             <SettingIcon />
           </button>
-          {showDialog && <Dialog ref={dialogRef} />}
+          {showDialog && (
+            <DialogItem
+              ref={dialogRef}
+              item={item}
+              todoId={todoId}
+              onTaskUpdated={onTaskUpdated}
+              onTaskDeleted={onTaskDeleted}
+            />
+          )}
         </div>
       </div>
     </div>

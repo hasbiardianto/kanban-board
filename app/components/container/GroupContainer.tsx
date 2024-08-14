@@ -30,9 +30,19 @@ export function GroupContainer({ todo }: { todo: Todo }) {
     setItems((prevItems) => [...prevItems, newItem]);
   };
 
+  const handleTaskUpdated = (updatedItem: Item) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  const handleTaskDeleted = (itemId: number) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+  };
+
   return (
-    <div className="flex flex-col border w-[350px] border-blue bg-bg-blue p-2 rounded max-w-full overflow-x-auto">
-      <div className="w-full p-2">
+    <div className="flex flex-col border w-[350px] border-blue bg-bg-blue p-2 rounded max-w-full">
+      <div className="w-full p-2 ">
         <div className="border border-blue rounded max-w-min">
           <h2 className="text-xs px-[8px] py-[2px] text-blue font-semibold text-nowrap">
             {todo.title}
@@ -41,7 +51,7 @@ export function GroupContainer({ todo }: { todo: Todo }) {
         <div className="my-2">
           <p className="text-xs font-bold">{todo.description}</p>
         </div>
-        <div className="flex flex-col gap-2 overflow-x-auto">
+        <div className="flex flex-col gap-2">
           {items.length === 0 ? (
             <div className="border bg-slate-50 rounded p-4 md:w-[300px]">
               <p className="text-sm font-semibold text-gray-500">No Task</p>
@@ -49,7 +59,12 @@ export function GroupContainer({ todo }: { todo: Todo }) {
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex-shrink-0">
-                <ItemContainer item={item} />
+                <ItemContainer
+                  item={item}
+                  todoId={todo.id}
+                  onTaskUpdated={handleTaskUpdated}
+                  onTaskDeleted={handleTaskDeleted}
+                />
               </div>
             ))
           )}
