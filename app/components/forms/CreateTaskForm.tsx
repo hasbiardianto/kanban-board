@@ -5,7 +5,6 @@ import Input from "../inputs/Input";
 import { Percentage } from "../inputs/Percentage";
 import SubmitButton from "../buttons/SubmitButton";
 import CancelButton from "../buttons/CancelButton";
-import { storeItems } from "@/app/api/items/route";
 import { Item } from "@/app/type";
 
 export function CreateTaskForm({
@@ -17,6 +16,8 @@ export function CreateTaskForm({
   onCancel: () => void;
   onTaskCreated: (newItem: Item) => void;
 }) {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
   const [name, setName] = useState<string>("");
   const [percentage, setPercentage] = useState<number>(0);
 
@@ -25,14 +26,21 @@ export function CreateTaskForm({
     const token = localStorage.getItem("auth_token");
     if (!token) {
       console.error("No auth token found");
-      return;
     }
-    try {
-      const newItem = await storeItems(name, percentage, todoId, token);
-      onTaskCreated(newItem);
-      onCancel();
-    } catch (error) {
-      console.error("Error creating task:", error);
+    const response = await fetch(`${API_URL}/todos/${todoId}/items`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: name,
+        progress_percentage: percentage,
+      }),
+    });
+    onTaskCreated(await response.json());
+    if (!response.ok) {
+      throw new Error("Failed to create new item");
     }
   };
 

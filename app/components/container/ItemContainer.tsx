@@ -96,7 +96,6 @@ export function ItemContainer({
                 todoId={todoId}
                 onTaskUpdated={onTaskUpdated}
                 onTaskDeleted={onTaskDeleted}
-                onTodoIdUpdate={onTodoIdUpdate}
               />
             </Suspense>
           )}

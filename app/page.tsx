@@ -26,16 +26,13 @@ function Home() {
       const token = localStorage.getItem("auth_token");
       setIsAuthenticated(!!token);
     };
-
     checkAuth();
-
     getTodos();
-
     window.addEventListener("storage", checkAuth);
     return () => {
       window.removeEventListener("storage", checkAuth);
     };
-  }, []);
+  });
 
   const toggleShow = () => {
     setShowModal(!showModal);

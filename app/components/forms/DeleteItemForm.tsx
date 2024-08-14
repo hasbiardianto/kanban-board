@@ -1,4 +1,3 @@
-import { destroyItems } from "@/app/api/items/route";
 import CancelButton from "../buttons/CancelButton";
 
 export function DeleteItemForm({
@@ -12,10 +11,24 @@ export function DeleteItemForm({
   onCancel: () => void;
   onTaskDeleted: (itemId: number) => void;
 }) {
-  function handleSubmit() {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+  async function handleSubmit() {
     try {
       const token = localStorage.getItem("auth_token");
-      destroyItems(todoId, itemId, token);
+      const response = await fetch(
+        `${API_URL}/todos/${todoId}/items/${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
       onTaskDeleted(itemId);
     } catch {
       console.error("Failed to delete item");

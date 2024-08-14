@@ -5,7 +5,6 @@ import Input from "../inputs/Input";
 import { Percentage } from "../inputs/Percentage";
 import Modal from "../Modal";
 import { useState } from "react";
-import { updateItems } from "@/app/api/items/route";
 
 export function UpdateItemForm({
   item,
@@ -21,12 +20,30 @@ export function UpdateItemForm({
   const [name, setName] = useState(item.name);
   const [percentage, setPercentage] = useState(item.progress_percentage);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const token = localStorage.getItem("auth_token");
-      const updatedItem = await updateItems(item.id, todoId, token, name, percentage);
-      onTaskUpdated(updatedItem)
+      const response = await fetch(
+        `${API_URL}/todos/${todoId}/items/${item.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: name,
+            progress_percentage: percentage,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update item");
+      }
+      onTaskUpdated(await response.json());
       onCancel();
     } catch (error) {
       throw error;
