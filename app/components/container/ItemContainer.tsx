@@ -2,7 +2,7 @@
 
 import { Item, Todo } from "@/app/type";
 import SettingIcon from "../icons/SettingIcon";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { DialogItem } from "../DialogItem";
 
 export function ItemContainer({
@@ -10,6 +10,7 @@ export function ItemContainer({
   todoId,
   todos,
   onTaskUpdated,
+  onTodoIdUpdate,
   onTaskDeleted,
   setActiveItem,
   setShowArea,
@@ -19,6 +20,7 @@ export function ItemContainer({
   todoId: number;
   todos: Todo[];
   onTaskUpdated: (updatedItem: Item) => void;
+  onTodoIdUpdate: (value: Item) => void;
   onTaskDeleted: (itemId: number) => void;
   setActiveItem: (itemId: number) => void;
   setShowArea: (show: boolean) => void;
@@ -52,7 +54,7 @@ export function ItemContainer({
 
   return (
     <div
-      className="border bg-slate-50 rounded p-4 md:w-[300px] w-full cursor-grab active:cursor-grab active:opacity-70 active:border-2 active:border-slate-500"
+      className="border bg-slate-50 rounded p-4 md:w-[300px] w-full cursor-grab active:cursor-grab active:border-slate-500"
       draggable
       onDragStart={() => {
         setShowArea(true);
@@ -81,19 +83,22 @@ export function ItemContainer({
         <span className="text-gray-500 text-xs px-1">
           {item.progress_percentage}%
         </span>
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left" draggable="false">
           <button ref={buttonRef} className="ml-2" onClick={toggleDialog}>
             <SettingIcon />
           </button>
           {showDialog && (
-            <DialogItem
-              ref={dialogRef}
-              item={item}
-              todos={todos}
-              todoId={todoId}
-              onTaskUpdated={onTaskUpdated}
-              onTaskDeleted={onTaskDeleted}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <DialogItem
+                ref={dialogRef}
+                item={item}
+                todos={todos}
+                todoId={todoId}
+                onTaskUpdated={onTaskUpdated}
+                onTaskDeleted={onTaskDeleted}
+                onTodoIdUpdate={onTodoIdUpdate}
+              />
+            </Suspense>
           )}
         </div>
       </div>

@@ -5,6 +5,10 @@ import { EditIcon } from "./icons/EditIcon";
 import { DeleteItemForm } from "./forms/DeleteItemForm";
 import { UpdateItemForm } from "./forms/UpdateItemForm";
 import { Item, Todo } from "../type";
+import { DeleteIcon } from "./icons/DeleteIcon";
+import Modal from "./Modal";
+import { MoveItemRight } from "./forms/MoveItemRight";
+import { MoveItemLeft } from "./forms/MoveItemLeft";
 
 const DialogItem = forwardRef<
   HTMLDivElement,
@@ -12,58 +16,82 @@ const DialogItem = forwardRef<
     item: Item;
     todoId: number;
     todos: Todo[];
-    onTaskUpdated: (item: Item) => void;
-    onTaskDeleted: (itemid: number) => void;
+    onTaskUpdated: (value: Item) => void;
+    onTaskDeleted: (id: number) => void;
   }
 >((props, ref) => {
   const { item, todoId, todos, onTaskUpdated, onTaskDeleted } = props;
-  const [showModal, setShowModal] = useState(false);
-  const toogleModal = () => {
-    setShowModal(!showModal);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const toggleEdit = () => {
+    setShowEdit(!showEdit);
   };
+  const toggleDelete = () => {
+    setShowDelete(!showDelete);
+  };
+
   return (
     <div
       ref={ref}
       className="absolute ml-3 mt-2 right-0 md:left-0 w-[300px] bg-white border border-gray-200 rounded shadow-xl z-10 text-xs p-2 font-bold"
-      draggable="false"
     >
-      <div className=" p-2 flex flex-col gap-2">
-        <button className="flex items-center gap-4 hover:text-primary">
+      <div className="p-2 flex flex-col gap-2">
+        <MoveItemRight
+          item={item}
+          todoId={todoId}
+          todos={todos}
+          onTaskUpdated={onTaskUpdated}
+        >
           <ArrowRightIcon />
           Move Right
-        </button>
-        <button
-          className="flex items-center gap-4 hover:text-primary"
-          onClick={() => console.log(item)}
+        </MoveItemRight>
+        <MoveItemLeft
+          item={item}
+          todoId={todoId}
+          todos={todos}
+          onTaskUpdated={onTaskUpdated}
         >
           <ArrowLeftIcon />
           Move Left
-        </button>
+        </MoveItemLeft>
         <button
           className="flex items-center gap-4 hover:text-primary"
-          onClick={toogleModal}
+          onClick={toggleEdit}
         >
           <EditIcon />
           Edit
         </button>
-        <DeleteItemForm
-          itemId={item.id}
-          todoId={todoId}
-          onTaskDeleted={onTaskDeleted}
-        />
+        <button
+          className="flex items-center gap-4 hover:text-red"
+          onClick={toggleDelete}
+        >
+          <DeleteIcon />
+          Delete
+        </button>
       </div>
-      {showModal && (
+      {showEdit && (
         <UpdateItemForm
-          onCancel={toogleModal}
+          onCancel={toggleEdit}
           item={item}
           todoId={todoId}
           onTaskUpdated={onTaskUpdated}
         />
       )}
+      {showDelete && (
+        <Modal>
+          <DeleteItemForm
+            itemId={item.id}
+            onCancel={toggleDelete}
+            todoId={todoId}
+            onTaskDeleted={onTaskDeleted}
+          />
+        </Modal>
+      )}
     </div>
   );
 });
 
-DialogItem.displayName = "Dialog";
+DialogItem.displayName = "DialogItem";
 
 export { DialogItem };

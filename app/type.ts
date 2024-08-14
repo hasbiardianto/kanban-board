@@ -16,3 +16,9 @@ export interface Item {
     updated_at: Date;
     progress_percentage: number;
 }
+
+export interface AdjacentIds {
+    id: number;
+    leftId: number | null;
+    rightId: number | null;
+};

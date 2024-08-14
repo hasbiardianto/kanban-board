@@ -15,7 +15,6 @@ export function GroupContainer({
   setOldTodoId,
   setShowArea,
   movedItem,
-  todosId,
 }: {
   todo: Todo;
   todos: Todo[];
@@ -23,7 +22,6 @@ export function GroupContainer({
   setOldTodoId: (value: number) => void;
   setShowArea: (value: boolean) => void;
   movedItem: Item | undefined;
-  todosId: number[];
 }) {
   const [showModal, setShowModal] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
@@ -50,6 +48,20 @@ export function GroupContainer({
     setItems((prevItems) =>
       prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
     );
+  };
+
+  const handleTodoIdUpdate = (updatedItem: Item) => {
+    setItems((prevItems) =>
+      prevItems.map(
+        (item) =>
+          item.id === updatedItem.id
+            ? item.todo_id !== updatedItem.todo_id
+              ? updatedItem
+              : item
+            : item
+      )
+    );
+    console.log(updatedItem);
   };
 
   const handleTaskDeleted = (itemId: number) => {
@@ -82,6 +94,7 @@ export function GroupContainer({
                   setShowArea={setShowArea}
                   onTaskUpdated={handleTaskUpdated}
                   onTaskDeleted={handleTaskDeleted}
+                  onTodoIdUpdate={handleTodoIdUpdate}
                   setActiveItem={setActiveItem}
                   setOldTodoId={setOldTodoId}
                 />

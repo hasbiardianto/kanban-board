@@ -5,7 +5,7 @@ import PlusIcon from "./components/icons/PlusIcon";
 import { withAuth } from "./components/withAuth";
 import Modal from "./components/Modal";
 import { fetchTodos } from "./api/todos/route";
-import { Item, Todo } from "./type";
+import { AdjacentIds, Item, Todo } from "./type";
 import { CreateGroupForm } from "./components/forms/CreateGroupForm";
 import { GroupContainer } from "./components/container/GroupContainer";
 import { DropArea } from "./components/DropArea";
@@ -16,7 +16,6 @@ function Home() {
   const [showModal, setShowModal] = useState(false);
   const [showArea, setShowArea] = useState(false);
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [todosId, setTodosId] = useState<number[]>([]);
   const [activeItem, setActiveItem] = useState<number>(0);
   const [targetTodoId, setTargetTodoId] = useState<number>(0);
   const [oldTodoId, setOldTodoId] = useState<number>(0);
@@ -31,6 +30,7 @@ function Home() {
     checkAuth();
 
     getTodos();
+
     window.addEventListener("storage", checkAuth);
     return () => {
       window.removeEventListener("storage", checkAuth);
@@ -49,13 +49,9 @@ function Home() {
     const token = localStorage.getItem("auth_token");
     const todos = (await fetchTodos(token)) as Todo[];
     setTodos(todos);
-    console.log(todos)
   };
 
   const onDrop = async () => {
-    console.log(
-      `Dragged item:${activeItem} todo: ${oldTodoId} to todo:${targetTodoId}`
-    );
     try {
       const token = localStorage.getItem("auth_token");
       const item = await moveItem(activeItem, oldTodoId, token, targetTodoId);
@@ -97,7 +93,6 @@ function Home() {
                 todo={todo}
                 todos={todos}
                 movedItem={movedItem}
-                todosId={todosId}
                 setShowArea={setShowArea}
                 setActiveItem={setActiveItem}
                 setOldTodoId={setOldTodoId}
