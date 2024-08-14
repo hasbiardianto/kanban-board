@@ -72,7 +72,7 @@ export function SignupForm() {
             className="p-2 border-2 rounded"
             id="confPassword"
             name="confPassword"
-            type="confPassword"
+            type="password"
             value={confPassword}
             onChange={(e) => setConfPassword(e.target.value)}
             placeholder="Confirmation Password"

@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/v1",
+        "permanent": false
+      }
+    ]
+  }
+  
