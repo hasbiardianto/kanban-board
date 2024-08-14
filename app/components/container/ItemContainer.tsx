@@ -1,6 +1,6 @@
 "use client";
 
-import { Item } from "@/app/type";
+import { Item, Todo } from "@/app/type";
 import SettingIcon from "../icons/SettingIcon";
 import { useState, useRef, useEffect } from "react";
 import { DialogItem } from "../DialogItem";
@@ -8,13 +8,21 @@ import { DialogItem } from "../DialogItem";
 export function ItemContainer({
   item,
   todoId,
+  todos,
   onTaskUpdated,
   onTaskDeleted,
+  setActiveItem,
+  setShowArea,
+  setOldTodoId,
 }: {
   item: Item;
   todoId: number;
+  todos: Todo[];
   onTaskUpdated: (updatedItem: Item) => void;
   onTaskDeleted: (itemId: number) => void;
+  setActiveItem: (itemId: number) => void;
+  setShowArea: (show: boolean) => void;
+  setOldTodoId: (todoId: number) => void;
 }) {
   const [showDialog, setShowDialog] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -44,8 +52,18 @@ export function ItemContainer({
 
   return (
     <div
-      className="border bg-slate-50 rounded p-4 md:w-[300px] w-full"
+      className="border bg-slate-50 rounded p-4 md:w-[300px] w-full cursor-grab active:cursor-grab active:opacity-70 active:border-2 active:border-slate-500"
       draggable
+      onDragStart={() => {
+        setShowArea(true);
+        setActiveItem(item.id);
+        setOldTodoId(todoId);
+      }}
+      onDragEnd={(event) => {
+        setShowArea(false);
+        setActiveItem(0);
+        setOldTodoId(0);
+      }}
     >
       <p className="text-sm font-semibold pb-1 border-b-2 border-dashed">
         {item.name}
@@ -71,6 +89,7 @@ export function ItemContainer({
             <DialogItem
               ref={dialogRef}
               item={item}
+              todos={todos}
               todoId={todoId}
               onTaskUpdated={onTaskUpdated}
               onTaskDeleted={onTaskDeleted}

@@ -5,16 +5,32 @@ import { RoundPlusIcon } from "../icons/RoundPlusIcon";
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import { CreateTaskForm } from "../forms/CreateTaskForm";
-import { fetchItems } from "@/app/api/items/route";
+import { fetchItems, updateItems } from "@/app/api/items/route";
 import { ItemContainer } from "./ItemContainer";
 
-export function GroupContainer({ todo }: { todo: Todo }) {
+export function GroupContainer({
+  todo,
+  todos,
+  setActiveItem,
+  setOldTodoId,
+  setShowArea,
+  movedItem,
+  todosId,
+}: {
+  todo: Todo;
+  todos: Todo[];
+  setActiveItem: (value: number) => void;
+  setOldTodoId: (value: number) => void;
+  setShowArea: (value: boolean) => void;
+  movedItem: Item | undefined;
+  todosId: number[];
+}) {
   const [showModal, setShowModal] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
     getItems();
-  }, []);
+  }, [movedItem]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -41,7 +57,7 @@ export function GroupContainer({ todo }: { todo: Todo }) {
   };
 
   return (
-    <div className="flex flex-col border w-[350px] border-blue bg-bg-blue p-2 rounded max-w-full">
+    <div className="flex flex-col border w-[350px] border-blue bg-bg-blue p-2 rounded">
       <div className="w-full p-2 ">
         <div className="border border-blue rounded max-w-min">
           <h2 className="text-xs px-[8px] py-[2px] text-blue font-semibold text-nowrap">
@@ -62,8 +78,12 @@ export function GroupContainer({ todo }: { todo: Todo }) {
                 <ItemContainer
                   item={item}
                   todoId={todo.id}
+                  todos={todos}
+                  setShowArea={setShowArea}
                   onTaskUpdated={handleTaskUpdated}
                   onTaskDeleted={handleTaskDeleted}
+                  setActiveItem={setActiveItem}
+                  setOldTodoId={setOldTodoId}
                 />
               </div>
             ))
@@ -81,8 +101,8 @@ export function GroupContainer({ todo }: { todo: Todo }) {
         <Modal>
           <CreateTaskForm
             onCancel={toggleModal}
-            todoId={todo.id}
             onTaskCreated={handleTaskCreated}
+            todoId={todo.id}
           />
         </Modal>
       )}

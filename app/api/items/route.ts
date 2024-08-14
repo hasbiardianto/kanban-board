@@ -53,6 +53,23 @@ export async function updateItems(itemId: number, todoId: number, token: string 
     return await response.json();
 }
 
+export async function moveItem(itemId: number, todoId: number, token: string | null, targetTodo: number): Promise<Item> {
+    const response = await fetch(`${API_URL}/todos/${todoId}/items/${itemId}`, {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            "target_todo_id": targetTodo
+        }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update item");
+    }
+    return await response.json();
+}
+
 // Delete a specific item
 export async function destroyItems(todoId: number, itemId: number, token: string | null): Promise<void> {
     const response = await fetch(`${API_URL}/todos/${todoId}/items/${itemId}`, {

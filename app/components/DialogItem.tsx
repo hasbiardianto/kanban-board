@@ -4,20 +4,20 @@ import { ArrowLeftIcon } from "./icons/ArrowLeftIcon";
 import { EditIcon } from "./icons/EditIcon";
 import { DeleteItemForm } from "./forms/DeleteItemForm";
 import { UpdateItemForm } from "./forms/UpdateItemForm";
-import { Item } from "../type";
+import { Item, Todo } from "../type";
 
 const DialogItem = forwardRef<
   HTMLDivElement,
   {
     item: Item;
     todoId: number;
+    todos: Todo[];
     onTaskUpdated: (item: Item) => void;
     onTaskDeleted: (itemid: number) => void;
   }
 >((props, ref) => {
-  const { item, todoId, onTaskUpdated, onTaskDeleted } = props;
+  const { item, todoId, todos, onTaskUpdated, onTaskDeleted } = props;
   const [showModal, setShowModal] = useState(false);
-
   const toogleModal = () => {
     setShowModal(!showModal);
   };
@@ -32,7 +32,10 @@ const DialogItem = forwardRef<
           <ArrowRightIcon />
           Move Right
         </button>
-        <button className="flex items-center gap-4 hover:text-primary">
+        <button
+          className="flex items-center gap-4 hover:text-primary"
+          onClick={() => console.log(item)}
+        >
           <ArrowLeftIcon />
           Move Left
         </button>
