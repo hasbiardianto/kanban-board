@@ -45,7 +45,13 @@ export function GroupContainer({
     if (!response.ok) {
       throw new Error("Failed to fetch items");
     }
-    setItems(await response.json());
+    const itemsData = await response.json();
+    setItems(
+      itemsData.sort(
+        (a: Item, b: Item) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+    );
   };
 
   const handleTaskCreated = (newItem: Item) => {

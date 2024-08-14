@@ -45,12 +45,18 @@ function Home() {
   const getTodos = async () => {
     const token = localStorage.getItem("auth_token");
     try {
-      const request = await fetch(`${API_URL}/todos`, {
+      const response = await fetch(`${API_URL}/todos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setTodos(await request.json());
+      const todosData = await response.json();
+      setTodos(
+        todosData.sort(
+          (a: Todo, b: Todo) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+      );
     } catch (error) {
       throw error;
     }
