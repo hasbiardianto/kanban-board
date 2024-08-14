@@ -1,10 +1,5 @@
 {
-    "redirects": [
-      {
-        "source": "/",
-        "destination": "/v1",
-        "permanent": false
-      }
-    ]
-  }
-  
+  "routes": [
+    { "src": "/(.*)", "dest": "/v1/$1" }
+  ]
+}
